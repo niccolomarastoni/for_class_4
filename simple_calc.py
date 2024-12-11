@@ -6,3 +6,8 @@ def sub(a, b):
 
 def mult(a, b):
     return a*b
+
+if __name__ == '__main__':
+    a = 3
+    b = 5
+    print(sum(a, b))

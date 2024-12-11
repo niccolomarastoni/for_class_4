@@ -1,3 +1,4 @@
+from simple_calc import sum, sub, mult
 import simple_calc as sc
 
 if __name__ == '__main__':
@@ -5,7 +6,7 @@ if __name__ == '__main__':
     a = int(input('a = '))
     b = int(input('b = '))
     if op == 0:
-        print(f'{a} + {b} = {sc.sum(a, b)}')
+        print(f'{a} + {b} = {sum(a, b)}')
 
     else:
         print('not available yet')
