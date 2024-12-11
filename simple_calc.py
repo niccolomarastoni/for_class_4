@@ -1,6 +1,8 @@
-a = int(input('a = '))
-b = int(input('b = '))
-if a > b:
-    print(a + b)
-else:
-    print(a - b)
+def sum(a, b):
+    return a + b
+
+def sub(a, b):
+    return a - b
+
+def mult(a, b):
+    return a*b
