@@ -5,9 +5,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
 from functions import *
 import streamlit as st
+
+with st.sidebar:
+    st.write('this is a sidebar')
 
 st.title('Titanic Project')
 
@@ -30,29 +34,45 @@ fig, ax = plt.subplots(figsize=(10,6))
 sns.heatmap(titanic_corr, annot=True, ax=ax)
 
 
+st.subheader('Feature comparisons')
+col_1, col_2 = st.columns(2)
 
-fig, axes = plt.subplots(1, 2, figsize=(8, 4))
-ax = axes[0]
-#titanic_df.Age.hist(ax=ax, bins=30)
-ax.hist(titanic_df.Age, bins=40)
-ax.set_xlabel('Age ranges')
-ax.set_ylabel('Quantity')
-ax = axes[1]
-titanic_df.Fare.hist(ax=ax, bins=40)
-ax.set_xlabel('Fare ranges')
-ax.set_ylabel('Quantity')
-plt.show()
+with col_1:
+    fig, axes = plt.subplots(figsize=(8, 4))
+    ax = axes
+    #titanic_df.Age.hist(ax=ax, bins=30)
+    ax.hist(titanic_df.Age, bins=40)
+    ax.set_xlabel('Age ranges')
+    ax.set_ylabel('Quantity')
+    st.pyplot(fig)
+    st.caption('Distribution of ages')
 
+with col_2:
+    fig, axes = plt.subplots(figsize=(8, 4))
+    ax = axes
+    titanic_df.Fare.hist(ax=ax, bins=40)
+    ax.set_xlabel('Fare ranges')
+    ax.set_ylabel('Quantity')
+    st.write(fig)
+    st.caption('Distribution of fares')
+
+st.write('The distribution of ages shows a normal distribution, while the fares are highly skewed to the left')
 #survival prediction
 titanic_df[['Pclass', 'Survived']].groupby('Pclass', as_index=False).mean()
 
-features = ['Sex', 'Pclass', 'Fare']
-x = titanic_df[features]
-y = titanic_df.Survived
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+with st.expander('Model'):
+    select_model = st.selectbox('Select a model: ', ['Random Forest', 'Gaussian NB'])
+    model = GaussianNB()
+    if select_model == 'Random Forest':
+        model = RandomForestClassifier()
 
-model = RandomForestClassifier()
-model.fit(x_train, y_train)
-y_pred = model.predict(x_test)
-print(accuracy_score(y_pred, y_test))
+    features = ['Sex', 'Pclass', 'Fare']
+    select_features = st.multiselect('Features:', features)
+    if len(select_features) != 0 and st.button('RUN MODEL'):
+        x = titanic_df[select_features]
+        y = titanic_df.Survived
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+        model.fit(x_train, y_train)
+        y_pred = model.predict(x_test)
+        st.write('Accuracy: ' + str(accuracy_score(y_pred, y_test)))
 
