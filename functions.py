@@ -1,3 +1,5 @@
+import pandas as pd
+
 def get_data(url : str) -> pd.DataFrame:
     '''
     get_data: given a url, outputs a dataframe with the right data
@@ -13,3 +15,9 @@ def get_data(url : str) -> pd.DataFrame:
         return data_df
     except:
         print('Not a proper csv file')
+
+def data_exploration(titanic_df):
+    titanic_df.head(2)
+    titanic_df.info()
+    titanic_df.describe().T
+    titanic_df.Sex.unique()

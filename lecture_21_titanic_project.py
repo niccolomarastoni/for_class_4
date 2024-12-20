@@ -1,65 +1,27 @@
 
 #imports
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+from functions import *
 
-"""**EX**: Write a function that takes an URL/path and returns a DataFrame if that URL/path is a valid csv file"""
-
-def get_data(url : str) -> pd.DataFrame:
-    '''
-    get_data: given a url, outputs a dataframe with the right data
-    attributes:
-    url: string
-
-    examples:
-    >> url = 'https://raw.githubusercontent.com/datasciencedojo/datasets/refs/heads/master/titanic.csv'
-    >> titanic_df = get_data(url)
-    '''
-    try:
-        data_df = pd.read_csv(url)
-        return data_df
-    except:
-        print('Not a proper csv file')
-
-a_string = ''' hello
-this
-works
-'''
-
-print(a_string)
-
+#downloading the data
 url = 'https://raw.githubusercontent.com/datasciencedojo/datasets/refs/heads/master/titanic.csv'
 titanic_df = get_data(url)
 
-titanic_df.head(2)
-
-print(get_data.__doc__)
-
-print(pd.concat.__doc__)
-
-titanic_df.info()
-
-titanic_df.describe().T
-
-titanic_df.Sex.unique()
-
+#backup
 titanic_df_backup = titanic_df.copy()
 
+#feature engineering
 titanic_df.Sex.replace({'male':0, 'female':1}, inplace=True)
 
-titanic_df.Sex[:2]
-
-import seaborn as sns
-
+#plots
 titanic_corr = titanic_df.corr(numeric_only=True)
 fig, ax = plt.subplots(figsize=(10,6))
 sns.heatmap(titanic_corr, annot=True, ax=ax)
-
-"""Comments about the correlation matrix
-
-**Ex**: Plot the distribution of Age and Fare using histograms
-"""
 
 fig, axes = plt.subplots(1, 2, figsize=(8, 4))
 ax = axes[0]
@@ -73,20 +35,9 @@ ax.set_xlabel('Fare ranges')
 ax.set_ylabel('Quantity')
 plt.show()
 
-"""comments about the histogram
-
-**EX**: what is the percentage of survived per Pclass?
-"""
-
 titanic_df.columns
 
 titanic_df[['Pclass', 'Survived']].groupby('Pclass', as_index=False).mean()
-
-"""#Predict who survives"""
-
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
 
 titanic_df.columns
 
